@@ -28,15 +28,30 @@ interface StreamResult {
 
 function stripCodeFence(text: string): string {
   let result = text.trim();
-  if (result.startsWith("```")) {
-    const newlineIdx = result.indexOf("\n");
-    if (newlineIdx !== -1) {
-      result = result.slice(newlineIdx + 1);
+
+  // If a triple-backtick fence appears anywhere, extract the first fenced block.
+  // The closing fence may not exist yet while streaming — treat everything after
+  // the opening fence as code in that case.
+  const openIdx = result.indexOf("```");
+  if (openIdx !== -1) {
+    const afterFence = result.slice(openIdx + 3);
+    const nlIdx = afterFence.indexOf("\n");
+    let inside = nlIdx !== -1 ? afterFence.slice(nlIdx + 1) : afterFence;
+    const closeIdx = inside.lastIndexOf("```");
+    if (closeIdx !== -1) {
+      inside = inside.slice(0, closeIdx);
     }
-    if (result.endsWith("```")) {
-      result = result.slice(0, -3);
-    }
+    return inside.trim();
   }
+
+  // No fences — strip any narration prefix before the first JS/TS-looking token.
+  const codeStart = result.search(
+    /(^|\n)\s*(import\s|const\s|let\s|var\s|export\s|function\s|class\s|"use\s|'use\s|\/\/|\/\*)/
+  );
+  if (codeStart > 0) {
+    result = result.slice(codeStart).replace(/^\n+/, "");
+  }
+
   return result.trim();
 }
 

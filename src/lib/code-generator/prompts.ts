@@ -18,7 +18,7 @@ Follow the instructions carefully:
 - If you need icons, use the lucide-react library, e.g. import { Camera } from "lucide-react".
 - If you need 3D graphics, use @react-three/fiber.
 - If you need HTTP requests, use the axios library.
-- Please ONLY return the full React code starting with the imports, nothing else. DO NOT START WITH \`\`\`typescript or \`\`\`tsx or \`\`\`.
+- CRITICAL: Output MUST start with an \`import\` statement on line 1. NO preamble in Indonesian, English, or any other language. NO sentences like "Berikut adalah kode" or "Here is the code". NO markdown fences (\`\`\`tsx, \`\`\`typescript, \`\`\`). NO explanations before or after the code. ONLY the raw TSX source code. The very first characters of your response must be the letters "i" "m" "p" "o" "r" "t".
 - ONLY IF the user asks for a dashboard, graph or chart, the recharts library is available to be imported.
 - The component file is App.tsx and its default export will be rendered by a Sandpack runtime.`;
 
