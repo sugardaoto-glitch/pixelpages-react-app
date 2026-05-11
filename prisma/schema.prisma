@@ -1,0 +1,177 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model User {
+  id               Int       @id @default(autoincrement()) @map("u_id")
+  name             String    @map("u_name") @db.VarChar(255)
+  email            String    @unique @map("u_email") @db.VarChar(255)
+  password         String    @map("u_password") @db.VarChar(255)
+  type             Int       @default(2) @map("u_type") @db.TinyInt
+  status           Int       @default(1) @map("u_status") @db.TinyInt
+  profilePic       String    @map("u_pic") @db.Text
+  profileDetails   String    @map("u_profile_details") @db.Text
+  plan             String    @map("u_plan") @db.Text
+  isParent         Int       @default(0) @map("is_parent")
+  parentId         Int       @default(0) @map("parent_id")
+  purchasedDate    DateTime  @map("u_purchaseddate")
+
+  campaigns        Campaign[]
+  siteSettings     SiteSettings[]
+  autoresponders   Autoresponder[]
+  paymentIntegrations PaymentIntegration[]
+  analytics        SiteAnalytics[]
+
+  @@map("usertbl")
+}
+
+model SiteSettings {
+  id               Int      @id @default(autoincrement())
+  userId           Int      @map("user_id")
+  siteName         String   @map("site_name") @db.VarChar(25)
+  siteLogo         String   @map("site_logo") @db.VarChar(255)
+  siteFavicon      String   @map("site_favicon") @db.VarChar(255)
+  mandrillSettings String   @map("mandrill_settings") @db.Text
+  smtpSettings     String   @map("smtp_settings") @db.Text
+  supportEmail     String   @map("support_email") @db.Text
+  dateUpdated      DateTime @map("date_updated")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("site_settings")
+}
+
+model DfyTemplate {
+  id             Int      @id @default(autoincrement())
+  userId         Int      @map("user_id")
+  templateName   String   @map("template_name") @db.VarChar(255)
+  zipPath        String   @map("zip_path") @db.Text
+  zipName        String   @map("zip_name") @db.Text
+  dateCreated    DateTime @map("date_created")
+  dateUpdated    DateTime @map("date_updated")
+  thumbnailPath  String   @map("thumbnail_path") @db.Text
+  isDownloadable Int      @default(0) @map("is_downloadable")
+
+  campaigns Campaign[]
+
+  @@map("dfy_templates")
+}
+
+model Campaign {
+  id                 Int      @id @default(autoincrement())
+  userId             Int      @map("user_id")
+  tempId             Int      @map("temp_id")
+  templateName       String   @map("template_name") @db.VarChar(255)
+  campaignHostName   String   @map("campaign_host_name") @db.VarChar(255)
+  templateThumbnail  String   @map("template_thumbnail") @db.VarChar(225)
+  emailSetting       String   @map("email_setting") @db.Text
+  customCss          String   @map("custom_css") @db.LongText
+  customJs           String   @map("custom_js") @db.LongText
+  templateHtml       String   @map("template_html") @db.LongText
+  createdDate        DateTime @map("created_date")
+  status             Int      @default(1) @db.TinyInt
+  templateSettings   String   @map("template_settings") @db.LongText
+
+  user     User        @relation(fields: [userId], references: [id])
+  template DfyTemplate @relation(fields: [tempId], references: [id])
+  analytics SiteAnalytics[]
+
+  @@map("user_campaigns")
+}
+
+model Plan {
+  id          Int      @id @default(autoincrement())
+  name        String   @map("p_name") @db.VarChar(255)
+  price       Int      @map("p_price")
+  currency    String   @map("p_currency") @db.VarChar(25)
+  interval    Int      @map("p_interval")
+  description String   @map("p_description") @db.Text
+  status      Int      @default(1) @map("p_status")
+  templates   String   @map("p_templates") @db.Text
+  sites       Int      @map("p_sites")
+  dateCreated DateTime @map("date_created")
+
+  @@map("plans_list")
+}
+
+model SiteAnalytics {
+  id         Int      @id @default(autoincrement())
+  siteId     Int      @map("site_id")
+  userId     Int      @map("user_id")
+  visitCount Int      @default(0) @map("visit_count")
+  date       DateTime @db.Date
+
+  campaign Campaign @relation(fields: [siteId], references: [id])
+  user     User     @relation(fields: [userId], references: [id])
+
+  @@map("site_analytics")
+}
+
+model Currency {
+  id        Int    @id @default(autoincrement())
+  shortCode String @map("short_code") @db.VarChar(10)
+  name      String @db.VarChar(255)
+  symbol    String @db.TinyText
+
+  @@map("currencies")
+}
+
+model Autoresponder {
+  id     Int    @id @default(autoincrement())
+  userId Int    @map("user_id")
+  mkey   String @db.VarChar(50)
+  value  String @db.LongText
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("autoresponder")
+}
+
+model PaymentIntegration {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  title     String   @db.VarChar(225)
+  key       Int
+  value     String   @db.LongText
+  payCred   String   @map("pay_cred") @db.Text
+  tokenData String   @map("token_data") @db.Text
+  isCreated DateTime
+  isUpdated DateTime
+  status    Int      @db.TinyInt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("payment_integration")
+}
+
+model PaymentInfo {
+  id            Int      @id @default(autoincrement())
+  customerId    Int      @map("customer_id")
+  paymentData   String   @map("payment_data") @db.Text
+  orderId       String   @map("order_id") @db.Text
+  planId        Int      @map("plan_id")
+  paymentStatus Int      @map("payment_status")
+  type          Int
+  createdOn     DateTime @map("created_on")
+  updatedOn     DateTime @map("updated_on")
+  status        Int
+
+  @@map("payment_info")
+}
+
+model FormData {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @map("user_id")
+  campaignId Int      @map("campaign_id")
+  formType   Int      @map("form_type") @db.TinyInt
+  userEmail  String   @map("user_email") @db.VarChar(255)
+  allDetails String   @map("all_details") @db.Text
+  dateAdded  DateTime @map("date_added")
+
+  @@map("ar_form_data")
+}
