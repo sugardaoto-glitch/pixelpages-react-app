@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -23,13 +22,26 @@ export default function Home() {
             </Button>
           </Link>
           <Link href="/signup">
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-white bg-transparent text-white hover:bg-white/10"
+            >
               Daftar Gratis
+            </Button>
+          </Link>
+          <Link href="/copywriting">
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-white bg-transparent text-white hover:bg-white/10"
+            >
+              Copywriting Studio
             </Button>
           </Link>
         </div>
       </div>
-      
+
       <div className="mt-16 w-full max-w-4xl overflow-hidden rounded-xl border border-white/20 bg-white/10 shadow-2xl backdrop-blur-md">
         <div className="flex items-center gap-2 border-b border-white/10 bg-white/5 p-3">
           <div className="flex gap-1.5">
