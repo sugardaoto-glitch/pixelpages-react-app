@@ -39,6 +39,15 @@ export default function Home() {
               Copywriting Studio
             </Button>
           </Link>
+          <Link href="/generator-kode">
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-white bg-transparent text-white hover:bg-white/10"
+            >
+              Generator Kode AI
+            </Button>
+          </Link>
         </div>
       </div>
 

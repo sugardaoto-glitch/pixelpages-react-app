@@ -30,15 +30,20 @@ PixelPages is a modern website builder built with Next.js, React, and Prisma.
 - User authentication
 - Dashboard for managing sites
 - **Copywriting Studio** — AI-powered e-commerce copywriting (`/copywriting`)
+- **Generator Kode AI** — AI React code generator with live Sandpack preview, full Bahasa Indonesia UI (`/generator-kode`)
 
-## Copywriting Studio
+## Copywriting Studio & Generator Kode AI
 
-A built-in AI assistant that generates and optimizes e-commerce copy
-(listings, ads, customer replies, marketing emails, and more). Open
-[`/copywriting`](http://localhost:3000/copywriting) after starting the dev server.
+Two built-in AI features share the same provider configuration:
 
-The Studio talks to an LLM through a thin API route at
-`/api/copywriting/generate`. Two provider modes are supported:
+- **Copywriting Studio** (`/copywriting`) generates and optimizes e-commerce copy
+  (listings, ads, customer replies, marketing emails, and more).
+- **Generator Kode AI** (`/generator-kode`) generates React components from a
+  natural-language description (in Indonesian) and previews them live with
+  Sandpack. Iterative refinement via follow-up prompts is supported.
+
+Both call an LLM through API routes at `/api/copywriting/generate` and
+`/api/code-generator/generate`. Two provider modes are supported:
 
 - **OpenAI-compatible** (default). Works with OpenAI, OpenRouter, Groq, Ollama,
   or any other endpoint that speaks the `/v1/chat/completions` SSE protocol.
